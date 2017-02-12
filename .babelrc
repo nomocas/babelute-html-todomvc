@@ -1,0 +1,19 @@
+{
+  "presets": [
+    "es2015"
+  ],
+  "plugins": [
+    "babel-plugin-unassert"
+  ],
+  "env": {
+  
+    "test": {
+
+    },
+  
+    "production": {
+        
+    }
+  
+  }
+}
