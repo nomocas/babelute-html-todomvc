@@ -27,7 +27,9 @@
   "license": "MIT",
   "dependencies": {
     "event-emitter-es6": "^1.1.5",
-    "eventemitter3": "^2.0.2"
+    "eventemitter3": "^2.0.2",
+    "babelute": "^0.4.0",
+    "babelute-html": "^0.2.1"
   },
   "devDependencies": {
     "assert": "^1.4.1",
