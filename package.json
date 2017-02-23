@@ -1,7 +1,7 @@
 {
   "name": "babelute-html-todomvc",
   "version": "0.0.1",
-  "description": "Full ES6 module boilerplate with rollup/babel and mocha/chai/karma/istanbul",
+  "description": "todomvc demo for babelute-html",
   "main": "dist/bundles/index.js",
   "module": "dist/bundles/index.mjs",
   "jsnext:main": "dist/bundles/index.mjs",
