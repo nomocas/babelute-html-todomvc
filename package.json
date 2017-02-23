@@ -1,6 +1,6 @@
 {
   "name": "babelute-html-todomvc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "todomvc demo for babelute-html",
   "main": "dist/bundles/index.js",
   "module": "dist/bundles/index.mjs",
