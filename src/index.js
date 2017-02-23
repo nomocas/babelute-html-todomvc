@@ -4,23 +4,23 @@
  * @author Gilles Coomans
  */
 
-import Todos from './store.js'; // my "immutable" store
+import store from './store.js'; // my "immutable" store
 import todomvcLexicon from './todomvc-html-lexicon'; // my custom html lexicon
 import differ from 'babelute-html/src/pragmatics/html-to-dom-diffing'; // first degree diffing (only for DOM)
 	
-const h = todomvcLexicon.firstLevelInitializer,
+const h = todomvcLexicon.initializer(true),
 	$root = document.getElementById('todoapp'); // where rendering take place
 
-// don't forget to add your lexicon(s) name to differ's _targets
-differ._targets.todomvc = true;	
+// don't forget to add your lexicon(s) name to differ (only for differ - not needed for dom or string output)
+differ.addLexicon(todomvcLexicon);	
 
-// -------- render ----------
+// ---------- render ----------
 
 let oldRendered, // for diffing tracking
 	animFrame;
 
 // bind todos update to main render
-Todos.on('update', (state) => {
+store.on('update', (state) => {
 	if (animFrame)
 		cancelAnimationFrame(animFrame);
 	animFrame = requestAnimationFrame(() => {
@@ -32,8 +32,8 @@ Todos.on('update', (state) => {
 
 // simple hashchange binding for routing
 function hashChange() {
-	Todos.route = window.location.hash.substring(2) || 'all';
-	Todos.emit('update', Todos);
+	store.route = window.location.hash.substring(2) || 'all';
+	store.emit('update', store);
 }
 window.onhashchange = hashChange;
 
