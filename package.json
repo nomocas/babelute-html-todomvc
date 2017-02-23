@@ -20,10 +20,8 @@
     "instrument": false
   },
   "keywords": [
-    "es6",
-    "boilerplate",
-    "test",
-    "coverage"
+    "babelute-html",
+    "todomvc"
   ],
   "author": "Gilles Coomans",
   "license": "MIT",
