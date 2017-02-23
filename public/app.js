@@ -768,18 +768,6 @@ var Lexicon = function () {
 		this.SecondLevel = Babelute.extends(parent.SecondLevel || Babelute);
 
 		/**
-   * the atomic initializer instance
-   * @type {Initializer}
-   */
-		this.initializer = this.Atomic.initializer;
-
-		/**
-   * the first-level initializer instance
-   * @type {Initializer}
-   */
-		this.firstLevelInitializer = this.FirstLevel.initializer;
-
-		/**
    * the secondLevel instance
    * @type {Babelute}
    * @protected
@@ -840,6 +828,12 @@ var Lexicon = function () {
 			});
 			return this;
 		}
+	}, {
+		key: 'addShortcut',
+		value: function addShortcut(name, method) {
+			this.Atomic.prototype[name] = this.FirstLevel.prototype[name] = this.SecondLevel.prototype[name] = method;
+			return this;
+		}
 
 		/**
    * @protected
@@ -883,6 +877,19 @@ var Lexicon = function () {
 		key: 'translateToFirstLevel',
 		value: function translateToFirstLevel(babelute, targets) {
 			return translate(babelute, this.FirstLevel, targets || this.targets);
+		}
+
+		/**
+   * return lexicon's initializer instance. (atomic or firstlevel depending on argument)
+   * @public
+   * @param  {Boolean} firstLevel true if you want firstLevel initializer, false overwise.
+   * @return {Initializer}           the needed initializer instance
+   */
+
+	}, {
+		key: 'initializer',
+		value: function initializer(firstLevel) {
+			return firstLevel ? this.FirstLevel.initializer : this.Atomic.initializer;
 		}
 	}]);
 	return Lexicon;
@@ -1163,6 +1170,10 @@ var Pragmatics = function () {
  * Pragmatics Class : minimal abstract class for homogeneous pragmatics.
  *
  * This is the minimal contract that a pragmatics should satisfy.
+ *
+ * @author Gilles Coomans
+ * @licence MIT
+ * @copyright 2016-2017 Gilles Coomans
  */
 
 function createPragmatics() {
@@ -1263,9 +1274,11 @@ var Scopes = function () {
 		}
 	}]);
 	return Scopes;
-}(); /*******************************************************
-      ************** Babelute Acions Environment ************
-      *******************************************************/
+}(); /**
+      * @author Gilles Coomans
+      * @licence MIT
+      * @copyright 2016-2017 Gilles Coomans
+      */
 
 // removed in production
 /**
@@ -1531,7 +1544,7 @@ var htmlLexicon = createLexicon('html');
 /*******
  *******	LANGUAGE ATOMS
  *******/
-htmlLexicon.atomsList = ['tag', 'attr', 'prop', 'data', 'class', 'id', 'style', 'text', 'on', 'onDom', 'onString', 'if', 'each', 'keyedEach', 'html']; // for convinience
+htmlLexicon.atomsList = ['tag', 'attr', 'prop', 'data', 'class', 'id', 'style', 'text', 'on', 'onDom', 'onString', 'if', 'each', 'keyedEach', 'html', 'execute']; // for convinience
 
 htmlLexicon.addAtoms(htmlLexicon.atomsList);
 
@@ -1539,11 +1552,19 @@ htmlLexicon.addAtoms(htmlLexicon.atomsList);
  *******	COMPOUNDS WORDS (based on language atoms)
  *******/
 // simple tags (made with .tag) (list should be completed)
-htmlLexicon.tagsList = ['body', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'section', 'span', 'button', 'main', 'article', 'hr', 'header', 'footer', 'label', 'ul', 'li', 'p', 'small', 'b', 'strong', 'i', 'u', 'select', 'title', 'meta', 'table', 'tr', 'td'];
+htmlLexicon.tagsList = ['body', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'section', 'span', 'button', 'main', 'article', 'hr', 'header', 'footer', 'label', 'ul', 'li', 'p', 'small', 'b', 'strong', 'i', 'u', 'select', 'title', 'meta', 'table', 'tr', 'td', 'tbody'];
 // events (made with .on) (list should be completed)
 htmlLexicon.eventsList = ['click', 'blur', 'focus', 'submit', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'touchstart', 'touchend', 'touchcancel', 'touchleave', 'touchmove', 'drop', 'dragover', 'dragstart'];
 
-htmlLexicon.addCompounds(function () {
+htmlLexicon.addShortcut('component', function (Class, props) {
+	return this._append('html', 'component', [Class, props, this.__first_level_babelute__]);
+}).addShortcut('execute', function (method) {
+	for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+		args[_key - 1] = arguments[_key];
+	}
+
+	return this._append('html', 'execute', [method, args]);
+}).addCompounds(function () {
 	var methods = {};
 	htmlLexicon.tagsList.forEach(function (tagName) {
 		methods[tagName] = function () {
@@ -1558,15 +1579,6 @@ htmlLexicon.addCompounds(function () {
 	return methods;
 }).addCompounds(function (h) {
 	return {
-		/**
-   * a link tag
-   * @public
-   * @implements {htmlLexicon}
-   * @param  {String} href     the link's href
-   * @param  {String} rel      this link's rel
-   * @param  {?Babelute} babelute an optional babelute to apply on tag
-   * @return {Babelute}          current babelute
-   */
 		link: function link(href, rel, babelute) {
 			return this.tag('link', [h.attr('href', href).attr('rel', rel), babelute]);
 		},
@@ -1621,12 +1633,6 @@ htmlLexicon.addCompounds(function () {
 				}
 			});
 		}
-	};
-});
-
-htmlLexicon.eventsList.forEach(function (eventName) {
-	htmlLexicon.FirstLevel.prototype[eventName] = function (handler, argument) {
-		return this._append('html', 'on', [eventName, handler, argument]);
 	};
 });
 
@@ -1747,9 +1753,9 @@ var renderActions = {
 	},
 	on: function on($tag, lexem) {
 		var args = lexem.args; /* eventName, callback */
-		var closure = lexem.closure = { handler: args[1] };
-		lexem.listener = function () {
-			return closure.handler.apply(this, arguments);
+		var closure = lexem.closure = { handler: args[1], arg: args[2] };
+		lexem.listener = function (e) {
+			return closure.handler.call(this, e, closure.arg);
 		};
 		$tag.addEventListener(args[0], lexem.listener);
 	},
@@ -1804,6 +1810,9 @@ var renderActions = {
 	},
 	html: function html($tag, lexem) {
 		lexem.children = insertHTML(lexem.args[0], $tag);
+	},
+	execute: function execute($tag, lexem) {
+		lexem.args[0].apply(null, lexem.args[1]);
 	}
 };
 
@@ -1855,22 +1864,9 @@ var difActions = {
 			}
 		}
 	},
-
-
-	/**
-  * each
-  * @public
-  * @param  {[type]} $tag   [description]
-  * @param  {[type]} lexem  [description]
-  * @param  {[type]} olexem [description]
-  * @param  {[type]} scopes    [description]
-  * @return {[type]}        [description]
-  */
 	each: function each($tag, lexem, olexem, scopes) {
 		var collection = lexem.args[0],
-
-		// ocollection = olexem.args[0],
-		renderItem = lexem.args[1],
+		    renderItem = lexem.args[1],
 		    ochildren = olexem.children,
 		    len = collection.length,
 		    olen = ochildren.length,
@@ -1879,9 +1875,7 @@ var difActions = {
 		var rendered = void 0,
 		    frag = void 0,
 		    item = void 0,
-
-		// notOutOfIndex,
-		i = 0;
+		    i = 0;
 
 		lexem.witness = olexem.witness; // keep track of witness
 
@@ -1890,13 +1884,8 @@ var difActions = {
 		for (; i < len; ++i) {
 			// for all items (from new lexem)
 			item = collection[i];
-			// notOutOfIndex = i < olen;
-			// if (notOutOfIndex && item === ocollection[i]) { // skip unchanged item
-			// 	children[i] = ochildren[i]; // keep old rendered
-			// 	continue;
-			// }
 			rendered = renderItem(item); // render firstdegree item
-			children[i] = rendered; // keep new rendered
+			children[i] = rendered; // keep new rendered for next diffing
 			if (i < olen) // dif existing children
 				dif($tag, rendered, ochildren[i], scopes);else // full render new item and place produced tags in fragment 
 				render($tag, rendered, scopes, frag); // ($tag is forwarded for first level non-tags atoms lexems (aka class, attr, ...))
@@ -1997,24 +1986,21 @@ var difActions = {
 		} else if (value !== ovalue) $tag.style[name] = value;
 	},
 	id: function id($tag, lexem, olexem) {
-		var args = lexem.args;
-		if (args[0] !== olexem.args[0]) $tag.id = args[0];
+		var id = lexem.args[0];
+		if (id !== olexem.args[0]) $tag.id = id;
 	},
 	on: function on($tag, lexem, olexem) {
 		var name = lexem.args[0],
-		    callback = lexem.args[1],
-		    arg = lexem.args[2],
 		    oname = olexem.args[0];
 
 		if (name !== oname) {
 			$tag.removeEventListener(oname, olexem.listener);
 			renderActions.on($tag, lexem);
 		} else {
-			lexem.closure = olexem.closure;
+			var closure = lexem.closure = olexem.closure;
 			lexem.listener = olexem.listener;
-			// if (args[1] !== oargs[1])
-			lexem.closure.handler = callback;
-			lexem.closure.arg = arg;
+			closure.handler = lexem.args[1];
+			closure.arg = lexem.args[2];
 		}
 	},
 	onDom: function onDom($tag, lexem, olexem /* args = render, dif, remove */) {
@@ -2031,6 +2017,10 @@ var difActions = {
 			});
 			lexem.children = insertHTML(newHTML, $tag, nextSibling);
 		}
+	},
+	execute: function execute($tag, lexem, olexem) {
+		if (lexem.args[0] !== olexem.args[0] || !argsChanged(lexem.args[1], olexem.args[1])) return;
+		lexem.args[0].apply(null, lexem.args[1]);
 	}
 };
 
@@ -2115,7 +2105,7 @@ function remove($tag, babelute, scopes) {
 			$tag.removeChild(lexem.child);
 			lexem.child = null;
 		}
-		if (lexem.witness) // view, if, each
+		if (lexem.witness) // if, each
 			$tag.removeChild(lexem.witness);
 	}
 }
@@ -2174,13 +2164,13 @@ var difPragmas = bbl.createPragmatics(_targets, {
  * @author Gilles Coomans
  */
 
-var h = todomvcLexicon.firstLevelInitializer;
+var h = todomvcLexicon.initializer(true);
 var $root = document.getElementById('todoapp'); // where rendering take place
 
-// don't forget to add your lexicon(s) name to differ
+// don't forget to add your lexicon(s) name to differ (only for differ - not needed for dom or string output)
 difPragmas.addLexicon(todomvcLexicon);
 
-// -------- render ----------
+// ---------- render ----------
 
 var oldRendered = void 0;
 var animFrame = void 0;
