@@ -8,10 +8,6 @@ import htmlLexicon from 'babelute-html/src/html-lexicon';
 
 const todomvcLexicon = babelute.createLexicon('todomvc', htmlLexicon);
 
-// lexicons need to be registred for One-Level-Development (i.e. for diffing)
-babelute.registerLexicon(htmlLexicon);
-babelute.registerLexicon(todomvcLexicon);
-
 todomvcLexicon.addCompounds((h) => {
 	return {
 		// main entry point
@@ -41,6 +37,7 @@ todomvcLexicon.addCompounds((h) => {
 				.todomvcFooter()
 			);
 		},
+
 		todomvcHeader(methods) {
 			return this.header(
 				h.id('header').class('header')
@@ -57,6 +54,7 @@ todomvcLexicon.addCompounds((h) => {
 				)
 			);
 		},
+
 		toggleAllButton(methods) {
 			return this.checkbox(false,
 				h.id('toggle-all').class('toggle-all')
@@ -65,6 +63,7 @@ todomvcLexicon.addCompounds((h) => {
 			)
 			.label(h.attr('for', 'toggle-all'), 'Mark all as complete');
 		},
+
 		todoLabel(methods, title, id) {
 			return this.label(title,
 				h.prop('contentEditable', true)
@@ -76,6 +75,7 @@ todomvcLexicon.addCompounds((h) => {
 				})
 			);
 		},
+
 		todoItem(todo, methods) {
 			return this.li(
 				h.class('completed', todo.completed)
@@ -87,6 +87,7 @@ todomvcLexicon.addCompounds((h) => {
 				)
 			);
 		},
+
 		todomvcFooter() {
 			return this.footer(
 				h.id('info').class('info')
@@ -94,6 +95,7 @@ todomvcLexicon.addCompounds((h) => {
 				.p('Part of ', h.a('http://todomvc.com', 'TodoMVC'))
 			);
 		},
+
 		statsSectionNav(route) {
 			return this.ul(
 				h.id('filters').class('filters')
@@ -102,6 +104,7 @@ todomvcLexicon.addCompounds((h) => {
 				.li(h.a('#/completed', h.class('selected', route === 'completed'), 'Completed'))
 			);
 		},
+
 		clearCompletedButton(todosCompleted, methods) {
 			return this.button(
 				h.id('clear-completed').class('clear-completed')
@@ -110,6 +113,7 @@ todomvcLexicon.addCompounds((h) => {
 				'Clear completed (' + todosCompleted + ')'
 			);
 		},
+
 		statsSection(todos, route, methods) {
 			const todosLeft = todos.filter((todo) => {
 					return !todo.completed;
@@ -127,6 +131,7 @@ todomvcLexicon.addCompounds((h) => {
 				.clearCompletedButton(todosCompleted, methods)
 			);
 		}
+		
 	};
 });
 
