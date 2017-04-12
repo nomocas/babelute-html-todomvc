@@ -6,12 +6,12 @@
 
 import store from './store.js'; // my "immutable" store
 import todomvcLexicon from './todomvc-html-lexicon'; // my custom html lexicon
-import differ from 'babelute-html/src/pragmatics/html-to-dom-diffing'; // first degree diffing (only for DOM)
+import differ from 'babelute-html-dom-diffing-pragmatics'; // first degree diffing (only for DOM)
 	
 const h = todomvcLexicon.initializer(true),
 	$root = document.getElementById('todoapp'); // where rendering take place
 
-// don't forget to add your lexicon(s) name to differ (only for differ - not needed for dom or string output)
+// don't forget to add your lexicon(s) name to differ (only for FirstLevel diffing - not needed for dom or string output)
 differ.addLexicon(todomvcLexicon);	
 
 // ---------- render ----------
