@@ -3,10 +3,9 @@
  * @author Gilles Coomans
  */
 
-import babelute from 'babelute';
-import htmlLexicon from 'babelute-html/src/html-lexicon';
+import htmlLexicon from 'babelute-html-lexicon';
 
-const todomvcLexicon = babelute.createLexicon('todomvc', htmlLexicon);
+const todomvcLexicon = htmlLexicon.createDialect('todomvc');
 
 todomvcLexicon.addCompounds((h) => {
 	return {
