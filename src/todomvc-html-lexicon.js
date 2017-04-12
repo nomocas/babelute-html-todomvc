@@ -21,19 +21,23 @@ todomvcLexicon.addCompounds((h) => {
 				.section(
 					h.id('todoapp').class('todoapp')
 					.todomvcHeader(methods)
-					.section(
-						h.id('main').class('main').visible(todos.length)
-						.toggleAllButton(methods)
-						.ul(
-							h.id('todo-list').class('todo-list')
-							.each(visibleTodos, (todo) => {
-								return h.todoItem(todo, methods);
-							})
-						)
-					)
+					.mainSection(visibleTodos, todos.length, methods)
 					.statsSection(todos, route, methods)
 				)
 				.todomvcFooter()
+			);
+		},
+
+		mainSection(visibleTodos, todosLength, methods) {
+			return this.section(
+				h.id('main').class('main').visible(todosLength)
+				.toggleAllButton(methods)
+				.ul(
+					h.id('todo-list').class('todo-list')
+					.each(visibleTodos, (todo) => {
+						return h.todoItem(todo, methods);
+					})
+				)
 			);
 		},
 
@@ -56,11 +60,11 @@ todomvcLexicon.addCompounds((h) => {
 
 		toggleAllButton(methods) {
 			return this.checkbox(false,
-				h.id('toggle-all').class('toggle-all')
-				.attr('name', 'toggle')
-				.on('click', methods.toggleAll)
-			)
-			.label(h.attr('for', 'toggle-all'), 'Mark all as complete');
+					h.id('toggle-all').class('toggle-all')
+					.attr('name', 'toggle')
+					.on('click', methods.toggleAll)
+				)
+				.label(h.attr('for', 'toggle-all'), 'Mark all as complete');
 		},
 
 		todoLabel(methods, title, id) {
@@ -80,9 +84,9 @@ todomvcLexicon.addCompounds((h) => {
 				h.class('completed', todo.completed)
 				.div(
 					h.class('view')
-					.checkbox(todo.completed, h.class('toggle').on('click', () => methods.toggleComplete(todo.id) ))
+					.checkbox(todo.completed, h.class('toggle').click(() => methods.toggleComplete(todo.id)))
 					.todoLabel(methods, todo.title, todo.id)
-					.button(h.class('destroy').on('click', () => methods.delete(todo.id) ))
+					.button(h.class('destroy').click(() => methods.delete(todo.id)))
 				)
 			);
 		},
@@ -130,7 +134,7 @@ todomvcLexicon.addCompounds((h) => {
 				.clearCompletedButton(todosCompleted, methods)
 			);
 		}
-		
+
 	};
 });
 
