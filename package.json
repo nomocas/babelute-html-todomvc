@@ -27,7 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "event-emitter-es6": "^1.1.5",
-    "babelute-html-dom-diffing-pragmatics": "^0.4.3",
+    "babelute-html-dom-diffing-pragmatics": "^0.3.0",
     "babelute-html-lexicon": "^0.2.3"
   },
   "devDependencies": {
