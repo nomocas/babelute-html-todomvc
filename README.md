@@ -2,12 +2,6 @@
 
 WARNING ! Deprecated. Use [htsl-todomvc](https://github.com/nomocas/htsl-todomvc) in place.
 
-
-[![Travis branch](https://img.shields.io/travis/nomocas/babelute-html-dom-pragmatics/master.svg)](https://travis-ci.org/nomocas/babelute-html-dom-pragmatics)
-[![bitHound Overall Score](https://www.bithound.io/github/nomocas/babelute-html-dom-pragmatics/badges/score.svg)](https://www.bithound.io/github/nomocas/babelute-html-dom-pragmatics)
-
-Babelute-html ToDoMVC demo.
-
 ## Licence
 
 The [MIT](http://opensource.org/licenses/MIT) License
